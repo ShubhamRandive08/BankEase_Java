@@ -488,8 +488,8 @@
             <div class="bank-logo">
                 <i class="fas fa-landmark"></i>
             </div>
-            <h2>Secure Online ATM Access</h2>
-            <p>Experience the next generation of digital banking with our secure online ATM services</p>
+            <h2>SBI Online ATM Access</h2>
+            <p>Experience the next generation of digital banking with our SBI online ATM services</p>
             
             <div class="security-features">
                 <div><i class="fas fa-lock"></i> 256-bit SSL Encryption</div>
