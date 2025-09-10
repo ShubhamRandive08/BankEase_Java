@@ -659,13 +659,6 @@ to {
 				</div>
 			</div>
 
-			<div class="input-group full-width">
-				<label class="checkbox-label"> <input type="checkbox"
-					required> I agree to the <a href="#">Terms & Conditions</a>
-					and <a href="#">Privacy Policy</a>
-				</label>
-			</div>
-
 			<button type="submit" onclick="validationRegisterPage()"
 				class="btn-register">Register Card</button>
 

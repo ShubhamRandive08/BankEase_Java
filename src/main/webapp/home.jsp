@@ -755,7 +755,7 @@
                     
                     <div class="balance-card">
                         <div class="balance-label">Available Balance</div>
-                        <div class="balance-amount">12,458.50</div>
+                        <div class="balance-amount">12,40058.50</div>
                         <div class="account-details">
                             <span>Checking Account</span>
                             <span>● ● ● ● 1234</span>
