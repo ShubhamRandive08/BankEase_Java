@@ -537,7 +537,16 @@
 
     <script>
     		function goHome(){
-    			window.location.href = "home.jsp";
+    			const cardNo = document.getElementById('cardNumber').value;
+    			const pin = document.getElementById('pin').value;
+    			const secCode = document.getElementById('securityCode').value;
+    			
+    			if(cardNo === "" || pin === "" || secCode === ""){
+    				alert("Please Fill All Details");
+    			}else{
+    				console.log("Please fill all details")
+    			}
+    				
     		}
     
         function togglePassword() {
