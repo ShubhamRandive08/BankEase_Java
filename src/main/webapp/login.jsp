@@ -6,6 +6,8 @@
 <meta charset="UTF-8">
 <title>Secure Online ATM Access</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     * {
@@ -500,11 +502,13 @@
         </div>
         
         <div class="right-panel">
+        	
             <h2>Login to Your Account</h2>
-            <form action="#" method="POST">
+            <form id="loginForm" action="login" method="POST">
+            		<h4>${msg}</h4>
                 <div class="input-group">
                     <label for="cardNumber">Card Number</label>
-                    <input type="text" id="cardNumber" name="cardNumber" placeholder="Enter your card number"  title="Please enter a valid 16-19 digit card number">
+                    <input type="text" id="cardNumber" name="cardNumber" placeholder="Enter your card number" required title="Please enter a valid 16-19 digit card number">
                     <i class="fas fa-credit-card"></i>
                 </div>
                 
@@ -520,12 +524,12 @@
                     <i class="fas fa-shield-alt"></i>
                 </div>
                 
-                <button onclick="goHome()" type="submit" class="btn-login">Access Account</button>
+                <button type="button" onclick="validateForm()" class="btn-login">Access Account</button>
             </form>
             
             <div class="additional-options">
-                <a href="forgatPin.jsp"><i class="fas fa-key"></i> Forgot PIN?</a>
-                <a href="#"><i class="fas fa-credit-card"></i> Lost Card?</a>
+                <a href="forgatPin.jsp" id="forgotPinLink"><i class="fas fa-key"></i> Forgot PIN?</a>
+                <a href="#" onclick="showLostCardAlert()"><i class="fas fa-credit-card"></i> Lost Card?</a>
                 <a href="Register.jsp"><i class="fas fa-user-plus"></i> Register</a>
             </div>
             
@@ -535,11 +539,10 @@
         </div>
     </div>
 
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-    		function goHome(){
-    			window.location.href = "home.jsp";
-    		}
-    
+        // Toggle password visibility
         function togglePassword() {
             const pinInput = document.getElementById('pin');
             const icon = document.querySelector('.password-toggle');
@@ -568,11 +571,156 @@
             e.target.value = formattedInput;
         });
         
-        // Enhance form submission for mobile devices
-        document.querySelector('form').addEventListener('submit', function(e) {
-            // Additional validation could be added here if needed
-            const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
-            document.getElementById('cardNumber').value = cardNumber;
+        // Form validation with SweetAlert
+        function validateForm() {
+            const cardNo = document.getElementById('cardNumber').value.replace(/\s/g, '');
+            const pin = document.getElementById('pin').value;
+            const secCode = document.getElementById('securityCode').value;
+            
+            // Check if any field is empty
+            if(cardNo === "" || pin === "" || secCode === "") {
+                showErrorAlert("Please fill all the required fields.");
+                return;
+            }
+            
+            // Validate card number length
+            if(cardNo.length < 16 || cardNo.length > 19) {
+                showErrorAlert("Please enter a valid card number (16-19 digits).");
+                return;
+            }
+            
+            // Validate PIN length
+            if(pin.length < 4 || pin.length > 6) {
+                showErrorAlert("PIN must be between 4-6 digits.");
+                return;
+            }
+            
+            // Validate CVV length
+            if(secCode.length < 3 || secCode.length > 4) {
+                showErrorAlert("Security code must be 3 or 4 digits.");
+                return;
+            }
+            
+            // If all validations pass, show success alert and submit form
+            showLoginSuccess();
+        }
+        
+        // Show error alert
+        function showErrorAlert(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: message,
+                confirmButtonColor: '#1a2a6c',
+                background: '#fff',
+                customClass: {
+                    popup: 'animated tada'
+                },
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            });
+        }
+        
+        // Show login success message and submit form
+        function showLoginSuccess() {
+            let timerInterval;
+            Swal.fire({
+                title: 'Processing Your Request',
+                html: 'Verifying your details <b></b> milliseconds.',
+                timer: 1000,
+                timerProgressBar: true,
+                background: '#fff',
+                didOpen: () => {
+                    Swal.showLoading();
+                    const b = Swal.getHtmlContainer().querySelector('b');
+                    timerInterval = setInterval(() => {
+                        b.textContent = (Swal.getTimerLeft() || 0).toFixed(0);
+                    }, 100);
+                },
+                willClose: () => {
+                    clearInterval(timerInterval);
+                }
+            }).then((result) => {
+                if (result.dismiss === Swal.DismissReason.timer) {
+                    // Submit the form after successful validation
+                    document.getElementById('loginForm').submit();
+                }
+            });
+        }
+        
+        // Show lost card alert
+        function showLostCardAlert() {
+            Swal.fire({
+                title: 'Report Lost Card',
+                html: `
+                    <div style="text-align:left;">
+                        <p>Please provide details to block your card immediately:</p>
+                        <input type="text" id="card-number-lost" class="swal2-input" placeholder="Card Number">
+                        <input type="text" id="account-number-lost" class="swal2-input" placeholder="Account Number">
+                        <input type="text" id="reason" class="swal2-input" placeholder="Reason for blocking">
+                    </div>
+                `,
+                background: '#fff',
+                confirmButtonText: 'Block Card',
+                confirmButtonColor: '#b21f1f',
+                showCancelButton: true,
+                cancelButtonColor: '#6c757d',
+                preConfirm: () => {
+                    const cardNumber = document.getElementById('card-number-lost').value;
+                    const accountNumber = document.getElementById('account-number-lost').value;
+                    const reason = document.getElementById('reason').value;
+                    
+                    if (!cardNumber || !accountNumber || !reason) {
+                        Swal.showValidationMessage('Please fill all fields');
+                    }
+                    return { 
+                        cardNumber: cardNumber, 
+                        accountNumber: accountNumber, 
+                        reason: reason 
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Card Blocked Successfully',
+                        html: `
+                            <div style="text-align:center;">
+                                <i class="fas fa-shield-alt" style="font-size:60px; color:#1a2a6c;"></i>
+                                <p style="margin-top:15px;">Your card has been blocked successfully. A new card will be dispatched to your registered address.</p>
+                            </div>
+                        `,
+                        confirmButtonColor: '#1a2a6c'
+                    });
+                }
+            });
+        }
+        
+        // Show welcome message on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                Swal.fire({
+                    title: 'Welcome to SBI Online ATM',
+                    text: 'Experience secure and convenient banking with our online services',
+                    icon: 'info',
+                    confirmButtonColor: '#1a2a6c',
+                    background: '#fff',
+                    showCloseButton: true,
+                    timer: 5000,
+                    timerProgressBar: true
+                });
+            }, 1000);
+            
+            // Add event listener to the Forgot PIN link
+            document.getElementById('forgotPinLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                // Simply redirect to the forgot PIN page without showing a SweetAlert
+                window.location.href = 'forgatPin.jsp';
+            });
         });
     </script>
 </body>

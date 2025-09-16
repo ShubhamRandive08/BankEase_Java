@@ -257,7 +257,105 @@
             color: var(--text-secondary);
         }
 
-        .transactions-section {
+        .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+s-section {
             background-color: var(--card-bg);
             border-radius: 12px;
             padding: 20px;
@@ -684,7 +782,7 @@
                 <div class="bank-name">SecureBank</div>
             </div>
             <div class="user-info">
-                <div class="welcome-text">Welcome, John Doe</div>
+                <div class="welcome-text">Welcome, <span class="ac_holder_name">${sessionScope.name }</span></div>
                 <div class="account-number">Account: XXXX-XXXX-XXXX-1234</div>
             </div>
             <button class="menu-toggle" id="menuToggle">
@@ -755,10 +853,10 @@
                     
                     <div class="balance-card">
                         <div class="balance-label">Available Balance</div>
-                        <div class="balance-amount">12,40058.50</div>
+                        <div class="balance-amount">${sessionScope.balance}</div>
                         <div class="account-details">
                             <span>Checking Account</span>
-                            <span>● ● ● ● 1234</span>
+                            <span>XXXX XXXX XXXX ${lastFourAccDigits }</span>
                         </div>
                     </div>
                     
@@ -1234,8 +1332,21 @@
         function changeView(view) {
             if (view === 'settings') {
                 showModal('settingsModal');
-            } else {
-                // Show loading notification for view change
+            } 
+            else if (view === 'details') {
+                // Redirect to account details JSP page
+                window.location.href = 'accDetails.jsp';
+            }
+            else if (view === 'transactions'){
+            		window.location.href = 'transication.jsp'
+            }
+            
+            else if (view === 'pinModal') {
+                // Redirect to PIN modal JSP page
+                window.location.href = 'pinModal.jsp';
+            }
+            else {
+                // Show loading notification for other view changes
                 Swal.fire({
                     title: 'Loading...',
                     text: `Switching to ${view} view`,
@@ -1254,7 +1365,7 @@
                     if (view !== 'dashboard') {
                         Swal.fire({
                             title: 'View Changed',
-                            text: `Now viewing:  {view.charAt(0).toUpperCase() + view.slice(1)}`,
+                            text: `Now viewing: ${view.charAt(0).toUpperCase() + view.slice(1)}`,
                             icon: 'success',
                             confirmButtonColor: 'var(--primary)',
                             confirmButtonText: 'OK',
@@ -1331,23 +1442,6 @@
                     timer: 1500
                 });
             }
-        });
-        
-        // Initialize with some demo data
-        document.addEventListener('DOMContentLoaded', function() {
-            // Show welcome message
-            setTimeout(() => {
-                Swal.fire({
-                    title: 'Welcome to SecureBank Online!',
-                    text: 'Your secure banking experience starts here',
-                    icon: 'info',
-                    confirmButtonColor: 'var(--primary)',
-                    confirmButtonText: 'Get Started',
-                    timer: 3000
-                });
-            }, 1000);
-            
-            console.log('Online ATM system loaded with SweetAlert2');
         });
     </script>
 </body>
