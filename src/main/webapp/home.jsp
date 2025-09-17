@@ -783,7 +783,7 @@ s-section {
             </div>
             <div class="user-info">
                 <div class="welcome-text">Welcome, <span class="ac_holder_name">${sessionScope.name }</span></div>
-                <div class="account-number">Account: XXXX-XXXX-XXXX-1234</div>
+                <div class="account-number">Account: XXXX-XXXX-XXXX-${lastFourAccDigits}</div>
             </div>
             <button class="menu-toggle" id="menuToggle">
                 <i class="fas fa-bars"></i>
